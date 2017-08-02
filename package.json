@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "mocha -t 8000",
-    "cover": "istanbul cover node_modules/.bin/_mocha -- -t 5000"
+    "cover": "istanbul cover node_modules/.bin/_mocha -- -t 8000"
   },
   "author": "Alex Perkins <aperkin@rei.com>",
   "license": "MIT",
