@@ -2,7 +2,8 @@
 
 const browserify = require('browserify');
 const vueify = require('vueify');
-const jsdom = require('jsdom-global');
+const { JSDOM } = require('jsdom');
+const jQuery = require('jquery');
 
 /**
  * Creates the DOM container for Vue components. This
@@ -36,21 +37,20 @@ function test(pathToHarness, containerId, cb) {
         script += chunk;
       })
       .on('end', () => {
-        const cleanup = jsdom(createDom(containerId, script), {
+        const dom = new JSDOM(createDom(containerId, script), {
           runScripts: 'dangerously',
           // resources: "usable"
         });
 
-        const $ = require('jquery');
-        window.$ = $;
-        window.cleanup = cleanup;
+        // Make $ available on window.
+        dom.window.$ = jQuery(dom.window);
 
         // cb for any DOM interaction prior to assertions.
         if (typeof cb === 'function') {
-          cb(window);
+          cb(dom.window);
         }
 
-        resolve(window);
+        resolve(dom.window);
       })
       .on('error', reject);
   });
