@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rei/asset-tag-frag-webpack-plugin.svg?branch=master)](https://travis-ci.org/rei/asset-tag-frag-webpack-plugin)
+[![Build Status](https://travis-ci.org/peripateticus/vue-test-utils.svg?branch=master)](https://travis-ci.org/peripateticus/vue-test-utils)
 
 # vue-test-utils
 
@@ -20,14 +20,19 @@ npm install
 ```javascript
 // index-spec.js
 const vueUtils = require('vue-test-utils');
-
+.
+.
 it('should do something amazing', function () {
     return test('path/to/harness', 'container-id').then((win) => {
       assert.ok(/* sommething */);
       win.cleanup();
     });
   });
+.
+.
 ```
+See [unit tests](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js) for examples.
+
 The `then` callback will give you the `window` object with `$` and a `cleanup` function that should be called after each test to clean up `window` in between tests.
 
 ``` 
