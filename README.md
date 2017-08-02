@@ -33,9 +33,6 @@ it('should do something amazing', function () {
 ```
 See [unit tests](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js) for examples.
 
-The `then` callback will give you the `window` object with `$` and a `cleanup` function that should be called after each test to clean up `window` in between tests.
+The `then` callback will give you the `window` object with [$](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L37) and a [cleanup](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L16) function that should be called after each test to clean up `window` in between tests.
 
-``` 
-# Assumptions
-
-- This assumes you are using webpack ^3.0.0. It has not been tested with older versions.
+```
