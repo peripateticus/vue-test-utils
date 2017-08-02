@@ -1,9 +1,9 @@
 /* eslint-env node, mocha, browser */
 
+const path = require('path');
 const browserify = require('browserify');
 const vueify = require('vueify');
 const { JSDOM } = require('jsdom');
-const jQuery = require('jquery');
 
 /**
  * Creates the DOM container for Vue components. This
@@ -12,13 +12,37 @@ const jQuery = require('jquery');
  * @param {String} containerId DOM Id of the container component will be placed in.
  * @param {String} script The compiled script returned from browserify. 
  */
-function createDom(containerId, script) {
+function createDom(script) {
   return `<body>
-            <div id=${containerId}></div>
+            <div id='parent-container'}></div>
             <script>${script}</script>
           </body>
         `;
 }
+
+/**
+     * Trigger function to trigger an event (currently only a MouseEvent) on
+     * a DOM element.
+     * @param win Window object.
+     * @param type The event type, e.g. 'click'
+     * @param el The element to trigger the event on.
+     * @param mouseEventInit Optional. Additional event properties. See
+     * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/MouseEvent.
+     */
+const trigger = function (win, type, el, mouseEventInit = {}) {
+  const event = new win.MouseEvent(type, Object.assign({
+    view: win,
+    bubbles: true,
+    cancelable: true,
+  }, mouseEventInit));
+
+  // Dispatch the event on element.
+  if (el && event) {
+    el.dispatchEvent(event);
+  } else {
+    throw new Error(`Unable to dispatch ${type} event on ${el.tagName}`);
+  }
+};
 
 /**
  * Test function that is called from within a mocha
@@ -27,23 +51,54 @@ function createDom(containerId, script) {
  * @param {String} pathToHarness The path to Vue harness where component is instantiated.
  * @param {String} containerId DOM ID of the container component will be placed in.
  */
-function test(pathToHarness, containerId, eventTriggerFn) {
+// function test(pathToHarness, containerId, eventTriggerFn) {
+function test(parentPath, dataPath, eventTriggerFn) {
   return new Promise((resolve, reject) => {
     let script = '';
-    browserify(pathToHarness)
+
+    const s = new require('stream').Readable();
+    const pathToParent = path.resolve(__dirname, parentPath); // '../test/harness/parent.vue');
+    const pathToData = path.resolve(__dirname, dataPath); // '../test/harness/component-data');
+    const vueMain = `const Vue = require('vue');
+
+// Parent component.
+const component = require('${pathToParent}');
+
+// Turn off tips.
+Vue.config.productionTip = false;
+
+// Instantiate component with data.
+new Vue({
+  el: '#parent-container',
+  render(createElement) {
+    return createElement(component, {
+      props: {
+        //item: require('../test/harness/component-data'),
+        item: require('${pathToData}'),
+      },
+    });
+  },
+});
+`;
+
+    s.push(vueMain);
+    s.push(null);
+
+    // browserify(pathToHarness)
+    browserify(s)
       .transform(vueify)
       .bundle()
       .on('data', (chunk) => {
         script += chunk;
       })
       .on('end', () => {
-        const dom = new JSDOM(createDom(containerId, script), {
+        const dom = new JSDOM(createDom(script), {
           runScripts: 'dangerously',
           // resources: "usable"
         });
 
-        // Make $ available on window.
-        dom.window.$ = jQuery(dom.window);
+        // Add event triggering utility to window.
+        dom.window.trigger = trigger.bind(null, dom.window);
 
         // cb for any DOM interaction prior to assertions.
         if (typeof eventTriggerFn === 'function') {
