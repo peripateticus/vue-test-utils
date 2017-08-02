@@ -45,6 +45,7 @@ function test(pathToHarness, containerId, cb) {
         window.$ = $;
         window.cleanup = cleanup;
 
+        // cb for any DOM interaction prior to assertions.
         if (typeof cb === 'function') {
           cb(window);
         }
