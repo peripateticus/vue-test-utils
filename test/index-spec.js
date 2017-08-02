@@ -38,16 +38,9 @@ describe('Vue test utils', () => {
   it('update dom per Vue dom event click handlers', function () {
     return test(pathToHarness, 'parent', function (win) {
       win.$('#click-add').trigger('click');
-    }).then((win) => {
-      assert.equal(win.$('#msg').text(), '1');
-    });
-  });
-
-  it('update dom per Vue dom event click handlers', function () {
-    return test(pathToHarness, 'parent', function (win) {
       win.$('#click-add').trigger('click');
     }).then((win) => {
-      assert.equal(win.$('#msg').text(), '1');
+      assert.equal(win.$('#msg').text(), '2');
     });
   });
 
