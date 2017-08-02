@@ -50,4 +50,7 @@ test(pathToHarness, containerId, cb).then(win => { /* Assertions */ })
 
 ## Event Triggering callback
 If you want to trigger an event on the DOM prior to your running assertions in the `then` callback, do so in the callback provided in `test`'s [3rd argument](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L45).
-```
+
+## Todo
+* Improve run time.
+* Investigate removing need for the harness.
