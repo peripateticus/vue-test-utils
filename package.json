@@ -4,7 +4,8 @@
   "description": "Test utils for Vue",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha -t 5000"
+    "test": "mocha -t 5000",
+    "cover": "istanbul cover node_modules/.bin/_mocha -- -t 5000"
   },
   "author": "Alex Perkins <aperkin@rei.com>",
   "license": "MIT",
@@ -27,6 +28,7 @@
     "eslint-config-airbnb": "~15.1.0",
     "eslint-plugin-import": "~2.7.0",
     "eslint-plugin-jsx-a11y": "~5.1.1",
-    "eslint-plugin-react": "~7.1.0"
+    "eslint-plugin-react": "~7.1.0",
+    "istanbul": "^0.4.5"
   }
 }
