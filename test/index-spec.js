@@ -2,13 +2,11 @@
 /* eslint-env node, mocha, browser */
 
 const assert = require('assert');
-const test = require('../src/index').test;
+const test = require('../src/index').test(__dirname);
 const item = require('./harness/component-data');
 const path = require('path');
 
 describe('Vue test utils', () => {
-  const pathToHarness = path.resolve(__dirname, './harness/vue-main');
-
   it('takes callback with window, trigger function', function () {
     return test('../test/harness/parent.vue', '../test/harness/component-data').then((win) => {
       assert.ok(win);

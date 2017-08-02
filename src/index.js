@@ -4,6 +4,7 @@ const path = require('path');
 const browserify = require('browserify');
 const vueify = require('vueify');
 const { JSDOM } = require('jsdom');
+const R = require('ramda');
 
 /**
  * Creates the DOM container for Vue components. This
@@ -51,15 +52,16 @@ const trigger = function (win, type, el, mouseEventInit = {}) {
  * @param {String} pathToHarness The path to Vue harness where component is instantiated.
  * @param {String} containerId DOM ID of the container component will be placed in.
  */
-// function test(pathToHarness, containerId, eventTriggerFn) {
-function test(parentPath, dataPath, eventTriggerFn) {
-  return new Promise((resolve, reject) => {
-    let script = '';
+const testCurried = R.curry((dirName, parentPath, dataPath, eventTriggerFn = () => {}) => new Promise((resolve, reject) => {
+  let script = '';
 
-    const s = new require('stream').Readable();
-    const pathToParent = path.resolve(__dirname, parentPath); // '../test/harness/parent.vue');
-    const pathToData = path.resolve(__dirname, dataPath); // '../test/harness/component-data');
-    const vueMain = `const Vue = require('vue');
+  const s = new require('stream').Readable();
+  const pathToParent = path.resolve(dirName, parentPath);
+  const pathToData = path.resolve(dirName, dataPath);
+
+  // console.log(pathToParent, pathToData);
+
+  const vueMain = `const Vue = require('vue');
 
 // Parent component.
 const component = require('${pathToParent}');
@@ -73,7 +75,6 @@ new Vue({
   render(createElement) {
     return createElement(component, {
       props: {
-        //item: require('../test/harness/component-data'),
         item: require('${pathToData}'),
       },
     });
@@ -81,36 +82,35 @@ new Vue({
 });
 `;
 
-    s.push(vueMain);
-    s.push(null);
+  s.push(vueMain);
+  s.push(null);
 
-    // browserify(pathToHarness)
-    browserify(s)
-      .transform(vueify)
-      .bundle()
-      .on('data', (chunk) => {
-        script += chunk;
-      })
-      .on('end', () => {
-        const dom = new JSDOM(createDom(script), {
-          runScripts: 'dangerously',
-          // resources: "usable"
-        });
+  // browserify(pathToHarness)
+  browserify(s)
+    .transform(vueify)
+    .bundle()
+    .on('data', (chunk) => {
+      script += chunk;
+    })
+    .on('end', () => {
+      const dom = new JSDOM(createDom(script), {
+        runScripts: 'dangerously',
+        // resources: "usable"
+      });
 
         // Add event triggering utility to window.
-        dom.window.trigger = trigger.bind(null, dom.window);
+      dom.window.trigger = trigger.bind(null, dom.window);
 
-        // cb for any DOM interaction prior to assertions.
-        if (typeof eventTriggerFn === 'function') {
-          eventTriggerFn(dom.window);
-        }
+      // cb for any DOM interaction prior to assertions.
+      if (typeof eventTriggerFn === 'function') {
+        eventTriggerFn(dom.window);
+      }
 
-        resolve(dom.window);
-      })
-      .on('error', reject);
-  });
-}
+      resolve(dom.window);
+    })
+    .on('error', reject);
+}));
 
 module.exports = {
-  test,
+  test: testCurried,
 };
