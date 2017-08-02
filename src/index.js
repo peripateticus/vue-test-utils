@@ -27,7 +27,7 @@ function createDom(containerId, script) {
  * @param {String} pathToHarness The path to Vue harness where component is instantiated.
  * @param {String} containerId DOM ID of the container component will be placed in.
  */
-function test(pathToHarness, containerId, cb) {
+function test(pathToHarness, containerId, eventTriggerFn) {
   return new Promise((resolve, reject) => {
     let script = '';
     browserify(pathToHarness)
@@ -46,8 +46,8 @@ function test(pathToHarness, containerId, cb) {
         dom.window.$ = jQuery(dom.window);
 
         // cb for any DOM interaction prior to assertions.
-        if (typeof cb === 'function') {
-          cb(dom.window);
+        if (typeof eventTriggerFn === 'function') {
+          eventTriggerFn(dom.window);
         }
 
         resolve(dom.window);

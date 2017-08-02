@@ -4,7 +4,7 @@
 
 # Description
 
-Vue test utils for running unit tests using jsdom &amp; mocha.
+Mocha test utility for running unit tests against your [Vue.js](https://vuejs.org/) component within jsdom.
 
 # Usage
 
@@ -32,7 +32,7 @@ it('should do something amazing', function () {
 ```
 See [unit tests](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js) for examples.
 
-The `then` callback will give you the `window` object with [jQuery](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L40) available for your tests.
+The `then` callback will give you access to the [`window` object with jQuery](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L40) for use in your tests.
 
 ## Test function API
 
@@ -44,7 +44,7 @@ test(pathToHarness, containerId, cb).then(win => { /* Assertions */ })
 
 * `containerId` {String} The DOM element's id where your parent component will be inserted. (The same id as in your harness). 
 
-* `cb` {Function} Event trigger callback.
+* `eventTriggerFn` {Function} Callback that you can use to trigger DOM events prior to assertions.
 
 
 ## Event Triggering callback
