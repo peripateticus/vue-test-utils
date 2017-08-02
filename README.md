@@ -32,7 +32,7 @@ it('should do something amazing', function () {
 ```
 See [unit tests](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js) for examples.
 
-The `then` callback will give you the `window` object with [jQuery](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L37) available for your tests.
+The `then` callback will give you the `window` object with [jQuery](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L40) available for your tests.
 
 ## Test function API
 
