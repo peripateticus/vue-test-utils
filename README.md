@@ -25,7 +25,6 @@ const vueUtils = require('vue-test-utils');
 it('should do something amazing', function () {
     return test('path/to/harness', 'container-id').then((win) => {
       assert.ok(/* something */);
-      win.cleanup();
     });
   });
 .
@@ -33,7 +32,7 @@ it('should do something amazing', function () {
 ```
 See [unit tests](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js) for examples.
 
-The `then` callback will give you the `window` object with [$](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L37) and a [cleanup](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L16) function that should be called after each test to clean up `window` in between tests.
+The `then` callback will give you the `window` object with [jQuery](https://github.com/peripateticus/vue-test-utils/blob/master/test/index-spec.js#L37) available for your tests.
 
 ## Test function API
 
