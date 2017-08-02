@@ -37,7 +37,9 @@ The `then` callback will give you the `window` object with [$](https://github.co
 
 ## Test function API
 
+```javascript
 test(pathToHarness, containerId, cb).then(win => { /* Assertions */ })
+```
 
 * `pathToHarness` {String} File path (absolute) to your vue test harness.
 
