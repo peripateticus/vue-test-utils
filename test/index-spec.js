@@ -9,6 +9,15 @@ const path = require('path');
 describe('Vue test utils', () => {
   const pathToHarness = path.resolve(__dirname, './harness/vue-main');
 
+  it('Pass take callback with window, $, cleanup function', function () {
+    return test(pathToHarness, 'parent').then((win) => {
+      assert.ok(win);
+      assert.ok(win.$);
+      assert.ok(win.cleanup);
+      win.cleanup();
+    });
+  });
+
   it('should render components with children', function () {
     return test(pathToHarness, 'parent').then((win) => {
       assert.equal(document.querySelector('#div1').textContent, 'div1');
